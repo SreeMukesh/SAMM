@@ -1,47 +1,65 @@
-// src/PassengerSummary.jsx
-import React from "react";
+
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { bookedSeatsData } from "./bookedSeatsStore"; // This should be a shared store or use context for real apps
 
 export default function PassengerSummary() {
-  const location = useLocation();
-  const bookedSeats = location.state?.bookedSeats || {};
+  const [password, setPassword] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
+
+  const correctPassword = "admin123"; // Replace with env var or secure vault in real apps
+
+  const handleLogin = () => {
+    if (password === correctPassword) {
+      setAuthenticated(true);
+    } else {
+      alert("Incorrect password");
+    }
+  };
+
+  if (!authenticated) {
+    return (
+      <div className="p-4 max-w-md mx-auto">
+        <h2 className="text-lg font-bold mb-2">Enter Password to View Passenger Summary</h2>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="border p-2 rounded w-full mb-2"
+        />
+        <button
+          onClick={handleLogin}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
+        >
+          Submit
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4 text-center">Passenger Summary</h1>
-      <div className="mb-4 text-center">
-        <Link to="/" className="text-blue-500 hover:underline">
-          ← Back to Seat Selection
-        </Link>
-      </div>
-      {Object.keys(bookedSeats).length === 0 ? (
-        <p className="text-center">No bookings yet.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300 text-sm">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="border px-4 py-2 text-left">Seat</th>
-                <th className="border px-4 py-2 text-left">Name</th>
-                <th className="border px-4 py-2 text-left">Mobile</th>
-                <th className="border px-4 py-2 text-left">Gender</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(bookedSeats)
-                .sort((a, b) => Number(a[0]) - Number(b[0]))
-                .map(([seat, details]) => (
-                  <tr key={seat}>
-                    <td className="border px-4 py-1">{seat}</td>
-                    <td className="border px-4 py-1">{details.name || "-"}</td>
-                    <td className="border px-4 py-1">{details.mobile || "-"}</td>
-                    <td className="border px-4 py-1 capitalize">{details.gender}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+    <div className="p-4 max-w-3xl mx-auto">
+      <h2 className="text-xl font-bold mb-4 text-center">Passenger Summary</h2>
+      <table className="table-auto w-full border border-collapse border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border px-4 py-2">Seat</th>
+            <th className="border px-4 py-2">Name</th>
+            <th className="border px-4 py-2">Mobile</th>
+            <th className="border px-4 py-2">Gender</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(bookedSeatsData).map(([seat, details]) => (
+            <tr key={seat}>
+              <td className="border px-4 py-2">{seat}</td>
+              <td className="border px-4 py-2">{details.name}</td>
+              <td className="border px-4 py-2">{details.mobile}</td>
+              <td className="border px-4 py-2 capitalize">{details.gender}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
