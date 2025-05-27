@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const generateSeatsLayout = () => {
   const layout = [];
@@ -154,6 +155,17 @@ export default function BusSeatSelector() {
         <h2 className="font-medium">Selected Seats:</h2>
         <p>{selectedSeats.join(", ") || "None"}</p>
       </div>
+	  {isAdmin && (
+		<div className="mt-6 text-center">
+			<Link
+				to="/summary"
+				state={{ bookedSeats }}
+				className="inline-block mt-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
+				>
+				View Passenger Summary
+			</Link>
+		</div>
+				)}
     </div>
   );
 }
