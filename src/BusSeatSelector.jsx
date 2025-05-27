@@ -63,6 +63,7 @@ export default function BusSeatSelector() {
               onClick={() => toggleSeat(seat)}
               disabled={!isAdmin || isBooked}
               className={`p-3 rounded-lg text-sm font-semibold border shadow relative h-12 w-12 ${isBooked ? "bg-gray-400 cursor-not-allowed" : "cursor-pointer bg-green-300 hover:bg-green-400"}${isSelected ? "ring-2 ring-green-600" : ""}`}
+              >
               {seat}
               {bookedGender && (
                 <span className="absolute bottom-1 right-1 text-xs text-white bg-black px-1 rounded">
