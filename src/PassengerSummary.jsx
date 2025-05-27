@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { bookedSeatsData } from "./bookedSeatsStore"; // This should be a shared store or use context for real apps
+import { useBooking } from "./BookingContext";
 
 export default function PassengerSummary() {
   const [password, setPassword] = useState("");
