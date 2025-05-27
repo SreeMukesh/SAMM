@@ -73,7 +73,8 @@ export default function BusSeatSelector() {
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-xl font-bold mb-4 text-center">Bus Seat Layout (52 Seats)</h1>
+      <h1 className="text-xl font-bold mb-4 text-center">Sri Arunachalaswara Mitri Mandali</h1>
+	  <h2 className="text-xl font-bold mb-2 text-center">Bus Number 2 (52 Seats)</h2>
 
       <div className="grid grid-cols-5 gap-2">
         {seatsLayout.flat().map((seat, index) => {
