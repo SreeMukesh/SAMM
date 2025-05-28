@@ -1,5 +1,42 @@
 
 import React, { useState } from "react";
+import { supabase } from './supabaseClient';
+
+const bookSeats = async () => {
+	if (!isAdmin) return;
+
+	const updates = selectedSeats.map(seat => ({
+		seat_number: seat,
+		name: "John Doe",
+		mobile: "1234567890",
+		gender,
+	}));
+	
+	for (const booking of updates) {
+		await supabase.from("bookings").insert([booking]);
+	}
+	
+	setBookedSeats(prev => ({
+		...prev,
+		...Object.fromEntries(updates.map(b => [b.seat_number, b.gender]))
+	}));
+	
+	set SelectedSeats([]);
+};
+
+useEffect(() => {
+	const fetchBookings = async () => {
+		const { data, error } = await supabase.from("bookings").select("*");
+		if (data) {
+			const mapped = {};
+			data.forEach(({ seat_number, gender }) => {
+				mapped[seat_number] = gender;
+			});
+			setBookedSeats(mapped);
+		}
+	};
+	fetchBookings();
+}, []);
 
 const generateSeatsLayout = () => {
   const layout = [];
