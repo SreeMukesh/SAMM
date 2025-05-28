@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useBooking } from "./BookingContext";
 
 export default function PassengerSummary() {
+  const { bookedSeats } = useBooking();
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
 
