@@ -50,7 +50,7 @@ export default function PassengerSummary() {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(bookedSeatsData).map(([seat, details]) => (
+          {Object.entries(bookedSeats).map(([seat, details]) => (
             <tr key={seat}>
               <td className="border px-4 py-2">{seat}</td>
               <td className="border px-4 py-2">{details.name}</td>
