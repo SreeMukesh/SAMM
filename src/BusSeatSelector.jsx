@@ -2,42 +2,6 @@
 import React, { useState } from "react";
 import { supabase } from './supabaseClient';
 
-const bookSeats = async () => {
-	if (!isAdmin) return;
-
-	const updates = selectedSeats.map(seat => ({
-		seat_number: seat,
-		name: "John Doe",
-		mobile: "1234567890",
-		gender,
-	}));
-	
-	for (const booking of updates) {
-		await supabase.from("bookings").insert([booking]);
-	}
-	
-	setBookedSeats(prev => ({
-		...prev,
-		...Object.fromEntries(updates.map(b => [b.seat_number, b.gender]))
-	}));
-	
-	set SelectedSeats([]);
-};
-
-useEffect(() => {
-	const fetchBookings = async () => {
-		const { data, error } = await supabase.from("bookings").select("*");
-		if (data) {
-			const mapped = {};
-			data.forEach(({ seat_number, gender }) => {
-				mapped[seat_number] = gender;
-			});
-			setBookedSeats(mapped);
-		}
-	};
-	fetchBookings();
-}, []);
-
 const generateSeatsLayout = () => {
   const layout = [];
   let seatNumber = 1;
@@ -51,12 +15,6 @@ const generateSeatsLayout = () => {
 
 const seatsLayout = generateSeatsLayout();
 
-const initialBookedSeats = {
-  2: { gender: "female", name: "Alice", mobile: "9876543210" },
-  7: { gender: "male", name: "Bob", mobile: "9123456789" },
-  20: { gender: "female", name: "Carol", mobile: "9988776655" }
-};
-
 export default function BusSeatSelector() {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookedSeats, setBookedSeats] = useState(initialBookedSeats);
@@ -66,9 +24,31 @@ export default function BusSeatSelector() {
   const [editingSeat, setEditingSeat] = useState(null);
 
   const isAdmin = true;
+  
+  useEffect(() => {
+	const fetchBookings = async () => {
+		const { data, error } = await supabase.from("bookings").select("*");
+		if (data) {
+			const mapped = {};
+			data.forEach(({ seat_number, gender }) => {
+				mapped[seat_number] = gender;
+			});
+			setBookedSeats(mapped);
+		}
+	};
+	fetchBookings();
+	}, []);
 
   const toggleSeat = (seat) => {
-    if (!seat || !isAdmin) return;
+    if (!seat || (!isAdmin && bookedSeats[seat])) return;
+	
+	setSelectedSeats((prev) =>
+		prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
+	);
+  };
+
+	const bookSeats = async () => {
+	if (!isAdmin || !name || !mobile) return;
 
     if (bookedSeats[seat]) {
       const { name, mobile, gender } = bookedSeats[seat];
